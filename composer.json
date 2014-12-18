@@ -1,0 +1,23 @@
+{
+  "name" : "dev-nanny/connector",
+  "description" : "Connectors for tools that DevNanny should run",
+  "license" : "GPL-3.0+",
+  "require": {
+    "league/flysystem": "~0.5"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "~4.4",
+    "satooshi/php-coveralls": "dev-master",
+    "whatthejeff/nyancat-phpunit-resultprinter": "~1.2"
+  },
+  "autoload": {
+    "psr-4" : {
+      "DevNanny\\Connector\\" : "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4" : {
+      "DevNanny\\Connector\\" : "tests/"
+    }
+  }
+}
