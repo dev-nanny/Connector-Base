@@ -8,7 +8,7 @@ use DevNanny\Connector\Interfaces\ConnectorInterface;
  * @coversDefaultClass DevNanny\Connector\Collection
  * @covers ::<!public>
  */
-class CollectionTest extends \PHPUnit_Framework_TestCase
+class CollectionTest extends BaseTestCase
 {
     ////////////////////////////////// FIXTURES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
     /** @var Collection */
@@ -34,9 +34,24 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers ::add
+     */
+    final public function testCollectionShouldRefuseToAddConnectorsWhenAskedToAddIncorrectType()
+    {
+        $this->setExpectedExceptionRegExp(
+            \PHPUnit_Framework_Error::class,
+            $this->regexMustBeAnInstanceOf('add', ConnectorInterface::class)
+        );
+        $collection = $this->collection;
+
+        /** @noinspection PhpParamsInspection */
+        $collection->add('foo');
+    }
+
+    /**
+     * @covers ::add
      * @covers ::getIterator
      */
-    final public function testCollectionShouldAddConnectorWhenGivenConnector()
+    final public function testCollectionShouldAddConnectorWhenAskedToAddConnector()
     {
         $collection = $this->collection;
         $expected = $this->getMockConnector();
