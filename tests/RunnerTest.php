@@ -10,7 +10,7 @@ use DevNanny\Connector\Interfaces\ConnectorInterface;
  * @covers ::<!public>
  * @covers ::__construct
  */
-class RunnerTest extends \PHPUnit_Framework_TestCase
+class RunnerTest extends BaseTestCase
 {
     ////////////////////////////////// FIXTURES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
     /** @var Runner */
@@ -34,7 +34,7 @@ class RunnerTest extends \PHPUnit_Framework_TestCase
     {
         $this->setExpectedExceptionRegExp(
             \PHPUnit_Framework_Error::class,
-            $this->buildRegex('__construct', CollectionInterface::class)
+            $this->regexMustImplementInterface('__construct', CollectionInterface::class)
         );
 
         /** @noinspection PhpParamsInspection */
@@ -179,42 +179,6 @@ class RunnerTest extends \PHPUnit_Framework_TestCase
     }
 
     /////////////////////////////// DATAPROVIDERS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-
-    /**
-     * @param $methodName
-     * @param $parameterClassName
-     *
-     * @return string
-     */
-    private function buildRegex($methodName, $parameterClassName)
-    {
-        $className = $this->getClassUnderTest();
-        $className = $this->escapeForRegexp($className);
-        $parameterClassName = $this->escapeForRegexp($parameterClassName);
-
-        $format = '/Argument [1-3]{1} passed to %s::%s\(\) must implement interface %s, none given/';
-
-        return sprintf($format, $className, $methodName, $parameterClassName);
-    }
-
-    /**
-     * @param $className
-     *
-     * @return mixed
-     */
-    private function escapeForRegexp($className)
-    {
-        return str_replace('\\', '\\\\', $className);
-    }
-
-    /**
-     * @return string
-     */
-    private function getClassUnderTest()
-    {
-        $className = get_called_class();
-        return substr($className, 0, -strlen('Test'));
-    }
 }
 
 /*EOF*/
