@@ -13,7 +13,7 @@ class Runner implements ConnectorInterface
 {
     ////////////////////////////// CLASS PROPERTIES \\\\\\\\\\\\\\\\\\\\\\\\\\\\
     /** @var CollectionInterface|ConnectorInterface[] */
-    private $connectors;
+    private $collection;
 
     //////////////////////////// SETTERS AND GETTERS \\\\\\\\\\\\\\\\\\\\\\\\\\\
     /**
@@ -23,8 +23,8 @@ class Runner implements ConnectorInterface
     {
         $errorCode = 0;
 
-        foreach ($this->connectors as $hook) {
-            $errorCode += (int) $hook->getErrorCode();
+        foreach ($this->collection as $connector) {
+            $errorCode += (int) $connector->getErrorCode();
         }
 
         return $errorCode;
@@ -37,7 +37,7 @@ class Runner implements ConnectorInterface
     {
         $output = '';
 
-        foreach ($this->connectors as $connector) {
+        foreach ($this->collection as $connector) {
             $output .= $connector->getOutput();
         }
 
@@ -46,11 +46,11 @@ class Runner implements ConnectorInterface
 
     //////////////////////////////// PUBLIC API \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
     /**
-     * @param CollectionInterface $connectors
+     * @param CollectionInterface $collection
      */
-    final public function __construct(CollectionInterface $connectors)
+    final public function __construct(CollectionInterface $collection)
     {
-        $this->connectors = $connectors;
+        $this->collection = $collection;
     }
 
     /**
@@ -61,7 +61,7 @@ class Runner implements ConnectorInterface
      */
     final public function run($path, array $changeList = [])
     {
-        foreach ($this->connectors as $connector) {
+        foreach ($this->collection as $connector) {
             $connector->run($path, $changeList);
         }
     }
