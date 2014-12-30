@@ -1,0 +1,6 @@
+{
+    "type" : "dev-nanny-connector",
+    "extra" : {
+        "connector-classes" : []
+    }
+}
