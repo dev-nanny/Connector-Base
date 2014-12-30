@@ -2,47 +2,80 @@
 
 namespace DevNanny\Connector;
 
+/**
+ * Base TestCase
+ */
 abstract class BaseTestCase extends \PHPUnit_Framework_TestCase
 {
     ////////////////////////////// CLASS PROPERTIES \\\\\\\\\\\\\\\\\\\\\\\\\\\\
     //////////////////////////// SETTERS AND GETTERS \\\\\\\\\\\\\\\\\\\\\\\\\\\
     //////////////////////////////// PUBLIC API \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
     /**
-     * @param $methodName
-     * @param $parameterClassName
+     * @param string $methodName
+     * @param string $parameterNumber
      *
      * @return string
+     *
      */
-    public function regexMustImplementInterface($methodName, $parameterClassName)
+    final public function regexMissingArgument($methodName, $parameterNumber)
     {
-        $format = '/Argument [1-3]{1} passed to %s::%s\(\) must implement interface %s, [a-zA-Z\\\\]+ given/';
+        $format = '/Missing argument %3$s for %1$s::%2$s\(\)/';
 
-        return $this->buildRegexp($methodName, $parameterClassName, $format);
+        return $this->buildRegexp($format, $methodName, $parameterNumber);
 
     }
 
     /**
-     * @param $methodName
-     * @param $parameterClassName
+     * @param string $methodName
+     * @param string $parameterClassName
      *
      * @return string
      */
-    public function regexMustBeAnInstanceOf($methodName, $parameterClassName)
+    final public function regexMustImplementInterface($methodName, $parameterClassName)
     {
-        $format = '/Argument [1-3]{1} passed to %s::%s\(\) must be an instance of %s, [a-zA-Z\\\\ ]+? given/';
+        $format = '/Argument [1-3]{1} passed to %1$s::%2$s\(\) must implement interface %3$s, [a-zA-Z\\\\]+ given/';
 
-        return $this->buildRegexp($methodName, $parameterClassName, $format);
+        return $this->buildRegexp($format, $methodName, $parameterClassName);
+
+    }
+
+    /**
+     * @param string $methodName
+     * @param string $parameterClassName
+     *
+     * @return string
+     */
+    final public function regexMustBeAnInstanceOf($methodName, $parameterClassName)
+    {
+        $format = '/Argument [1-3]{1} passed to %1$s::%2$s\(\) must be an instance of %3$s, [a-zA-Z\\\\ ]+? given/';
+
+        return $this->buildRegexp($format, $methodName, $parameterClassName);
+    }
+
+    /**
+     * @param string $regex
+     * @param string $delimiter
+     *
+     * @return string
+     */
+    final public function createRegexFromFormat($format)
+    {
+        $delimiter = '/';
+        $parameters = func_get_args();
+        $regex = call_user_func_array('sprintf', $parameters);
+
+        return $delimiter . preg_quote($regex, $delimiter) . $delimiter;
     }
 
     ////////////////////////////// UTILITY METHODS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\
     /**
-     * @param $methodName
-     * @param $parameterClassName
-     * @param $format
+     * @param string $methodName
+     * @param string $parameterClassName
+     * @param string $format
      *
      * @return string
      */
-    private function buildRegexp($methodName, $parameterClassName, $format)
+    private function buildRegexp($format, $methodName, $parameterClassName)
     {
         $className = $this->getClassUnderTest();
         $className = $this->escapeForRegexp($className);
@@ -52,9 +85,9 @@ abstract class BaseTestCase extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @param $className
+     * @param string $className
      *
-     * @return mixed
+     * @return string
      */
     private function escapeForRegexp($className)
     {
