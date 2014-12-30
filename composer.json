@@ -1,5 +1,5 @@
 {
-  "name" : "dev-nanny/connector",
+  "name" : "dev-nanny/connector-base",
   "description" : "Connectors for tools that DevNanny should run",
   "license" : "GPL-3.0+",
   "require": {
