@@ -4,6 +4,7 @@ namespace DevNanny\Connector;
 
 use DevNanny\Connector\Interfaces\CollectionInterface;
 use DevNanny\Connector\Interfaces\ConnectorInterface;
+use League\Flysystem\FilesystemInterface;
 
 /**
  * Executes all Connectors for a given Collection, taking note of output and
@@ -54,15 +55,15 @@ class Runner implements ConnectorInterface
     }
 
     /**
-     * @param string $path
+     * @param FilesystemInterface $filesystem
      * @param array $changeList
      *
      * @return void
      */
-    final public function run($path, array $changeList = [])
+    final public function run(FilesystemInterface $filesystem, array $changeList = [])
     {
         foreach ($this->collection as $connector) {
-            $connector->run($path, $changeList);
+            $connector->run($filesystem, $changeList);
         }
     }
 }

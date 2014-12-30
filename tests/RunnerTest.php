@@ -4,6 +4,7 @@ namespace DevNanny\Connector;
 
 use DevNanny\Connector\Interfaces\CollectionInterface;
 use DevNanny\Connector\Interfaces\ConnectorInterface;
+use League\Flysystem\FilesystemInterface;
 
 /**
  * @coversDefaultClass DevNanny\Connector\Runner
@@ -137,19 +138,20 @@ class RunnerTest extends BaseTestCase
 
         $mockConnector = $this->getMockConnector();
 
-        $path = '/foo/bar/baz';
+        /** @var FilesystemInterface|\PHPUnit_Framework_MockObject_MockObject $mockFileSystem */
+        $mockFileSystem = $this->getMock(FilesystemInterface::class);
         $changeList = ['foo', 'bar', 'baz'];
 
         $mockConnector->expects($this->exactly(3))
             ->method('run')
-            ->with($path, $changeList)
+            ->with($mockFileSystem, $changeList)
         ;
 
         $this->iterator->append($mockConnector);
         $this->iterator->append($mockConnector);
         $this->iterator->append($mockConnector);
 
-        $runner->run($path, $changeList);
+        $runner->run($mockFileSystem, $changeList);
     }
 
     ////////////////////////////// MOCKS AND STUBS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\

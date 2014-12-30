@@ -2,9 +2,14 @@
 
 namespace DevNanny\Connector\Interfaces;
 
+use League\Flysystem\FilesystemInterface;
+
 /**
  * An implementing class should act as a bridge between any tool or command that
- * is to be run against the code-base as a git-hook, and the actual git-hook.
+ * is to be run against the code-base, and the actual code-base.
+ *
+ * It receives the filesystem and a change-set (in situations this makes sense)
+ * and should decide for itself if (and which) actions should be taken on "run".
  */
 interface ConnectorInterface
 {
@@ -25,12 +30,12 @@ interface ConnectorInterface
      * tool it acts as a bridge for, storing the output and error-code of that
      * tool to be retrieved at a later point.
      *
-     * @param string $path The path to run the connected tool against
+     * @param FilesystemInterface $filesystem The filesystem to run the connected tool against
      * @param array $changeList Optional, the files that have changed
      *
      * @return null
      */
-    public function run($path, array $changeList = []);
+    public function run(FilesystemInterface $filesystem, array $changeList = []);
 }
 
 /*EOF*/
