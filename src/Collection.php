@@ -12,9 +12,17 @@ class Collection implements CollectionInterface
 {
     ////////////////////////////// CLASS PROPERTIES \\\\\\\\\\\\\\\\\\\\\\\\\\\\
     /** @var ConnectorInterface[]|\ArrayIterator */
-    private $connectors = [];
+    private $connectors;
 
     //////////////////////////// SETTERS AND GETTERS \\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+    /**
+     *
+     */
+    final public function __construct()
+    {
+        $this->connectors = new \ArrayIterator;
+    }
     /**
      * Retrieve internal iterator
      *

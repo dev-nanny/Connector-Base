@@ -6,6 +6,7 @@ use DevNanny\Connector\Interfaces\ConnectorInterface;
 
 /**
  * @coversDefaultClass DevNanny\Connector\Collection
+ * @covers ::__construct
  * @covers ::<!public>
  */
 class CollectionTest extends BaseTestCase
@@ -63,6 +64,22 @@ class CollectionTest extends BaseTestCase
         $this->assertEquals($expected, $actual);
     }
 
+    /**
+     * @covers ::getIterator
+     * @covers ::add
+     */
+    final public function testCollectionShouldBeIteratableWhenIterated()
+    {
+        $collection = $this->collection;
+        $expected = $this->getMockConnector();
+
+        $collection->add($expected);
+
+        foreach ($collection as $actual) {
+            $this->assertSame($expected, $actual);
+        }
+
+    }
     ////////////////////////////// MOCKS AND STUBS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\
     /**
      * @return ConnectorInterface|\PHPUnit_Framework_MockObject_MockObject
