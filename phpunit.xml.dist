@@ -15,22 +15,20 @@
     printerFile="vendor/whatthejeff/nyancat-phpunit-resultprinter/src/NyanCat/PHPUnit/ResultPrinter.php"
     printerClass="NyanCat\PHPUnit\ResultPrinter"
 >
-    <testsuites>
-        <testsuite name="dev-nanny/connector-util">
-            <directory suffix=".php">tests/</directory>
-        </testsuite>
-    </testsuites>
-
     <logging>
         <log type="testdox-text" target="build/logs/testdox.txt"/>
         <log type="coverage-text" target="php://stdout"/>
         <log type="coverage-clover" target="build/logs/clover.xml"/>
     </logging>
 
+    <testsuites>
+        <testsuite name="dev-nanny/connector-base">
+            <directory suffix=".php">tests/</directory>
+        </testsuite>
+    </testsuites>
+
     <filter>
         <whitelist processUncoveredFilesFromWhitelist="true">
-            <file>interface or empty class file goes here</file>
-            <!--<directory>src/</directory>-->
         </whitelist>
     </filter>
 </phpunit>
