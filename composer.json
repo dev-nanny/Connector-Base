@@ -1,6 +1,6 @@
 {
   "name" : "dev-nanny/connector-base",
-  "description" : "Connectors for tools that DevNanny should run",
+  "description" : "Base package for Connectors that DevNanny should run",
   "license" : "GPL-3.0+",
   "require": {
     "league/flysystem": "~0.5"
