@@ -3,7 +3,6 @@
   "description" : "Base package for Connectors that DevNanny should run",
   "license" : "GPL-3.0+",
   "require": {
-        "composer/composer": "@dev",
         "league/flysystem": "~0.5"
   },
   "require-dev": {
