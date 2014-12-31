@@ -59,33 +59,29 @@ class LocatorTest extends BaseTestCase
 
     /**
      * @covers ::locate
+     *
+     * @dataProvider provideEmptyComposerJson
+     *
+     * @param $json
      */
-    final public function testLocatorShouldFindComposerFilesWhenAskedToLocateConnectors()
+    final public function testLocatorShouldFindComposerFilesWhenAskedToLocateConnectors($json)
     {
         $locator = $this->locator;
         $mockFileSystem = $this->mockFileSystem;
 
-        $mockFileList = array(
-            array(
-                'basename' => 'composer.json',
-                'path' => 'tests/fixtures/empty-composer.json',
-            )
-        );
-
-        $mockFileSystem->expects($this->exactly(1))
-            ->method('listContents')
-            ->with('./', true)
-            ->willReturn($mockFileList)
-        ;
-
+        $this->prepareFileSystem($mockFileSystem, $json);
 
         $locator->locate();
     }
 
     /**
      * @covers ::locate
+     *
+     * @dataProvider provideComposerJsonWithNonExistingPluginClass
+     *
+     * @param $json
      */
-    final public function testLocatorShouldComplaintAboutConnectorsThatDoNotExistWhenAskedToLocateConnectors()
+    final public function testLocatorShouldComplaintAboutConnectorsThatDoNotExistWhenAskedToLocateConnectors($json)
     {
         $locator = $this->locator;
         $mockFileSystem = $this->mockFileSystem;
@@ -95,35 +91,112 @@ class LocatorTest extends BaseTestCase
             $this->createRegexFromFormat(Locator::ERROR_CONNECTOR_NOT_FOUND, 'Foo')
         );
 
-        $mockFileList = array(
-            array(
-                'basename' => 'composer.json',
-                'path' => 'tests/fixtures/plugin-composer-with-non-existing-plugin-class.json',
-            )
-        );
-
-        $mockFileSystem->expects($this->exactly(1))
-            ->method('listContents')
-            ->with('./', true)
-            ->willReturn($mockFileList)
-        ;
-
+        $this->prepareFileSystem($mockFileSystem, $json);
 
         $locator->locate();
     }
 
     /**
      * @covers ::locate
+     *
+     * @dataProvider provideComposerJsonWithExistingPluginClass
+     *
+     * @param $json
      */
-    final public function testLocatorShouldFindConnectorWhenAskedToLocateConnectors()
+    final public function testLocatorShouldFindConnectorWhenAskedToLocateConnectors($json)
     {
         $locator = $this->locator;
         $mockFileSystem = $this->mockFileSystem;
 
+        $this->prepareFileSystem($mockFileSystem, $json);
+
+        $locator->locate();
+    }
+    ////////////////////////////// MOCKS AND STUBS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+    /////////////////////////////// DATAPROVIDERS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+    /**
+     * @return array
+     */
+    final public function provideEmptyComposerJson()
+    {
+        return array(
+            array(<<<'JSON'
+{}
+JSON
+            )
+        );
+    }
+
+    /**
+     * @return array
+     */
+    final public function provideComposerJsonWithoutAnyPluginClass()
+    {
+        return array(
+            array(<<<'JSON'
+{
+    "type" : "dev-nanny-connector",
+    "extra" : {
+        "connector-classes" : []
+    }
+}
+JSON
+            )
+        );
+    }
+
+    /**
+     * @return array
+     */
+    final public function provideComposerJsonWithNonExistingPluginClass()
+    {
+        return array(
+            array(<<<'JSON'
+{
+    "type" : "dev-nanny-connector",
+    "extra" : {
+        "connector-classes" : [
+            "Foo"
+        ]
+    }
+}
+JSON
+            )
+        );
+    }
+
+    /**
+     * @return array
+     */
+    final public function provideComposerJsonWithExistingPluginClass()
+    {
+        return array(
+            array(<<<'JSON'
+{
+    "type" : "dev-nanny-connector",
+    "extra" : {
+        "connector-classes" : [
+            "DevNanny\\Connector\\Collection"
+        ]
+    }
+}
+JSON
+            )
+        );
+    }
+
+    /**
+     * @param \PHPUnit_Framework_MockObject_MockObject $mockFileSystem
+     * @param string $json
+     */
+    private function prepareFileSystem(\PHPUnit_Framework_MockObject_MockObject $mockFileSystem, $json)
+    {
+        $fileName = Locator::LOCATE_FILE;
+        $path = 'foo/bar/baz/' . $fileName;
         $mockFileList = array(
             array(
-                'basename' => 'composer.json',
-                'path' => 'tests/fixtures/plugin-composer-with-existing-plugin-class.json',
+                'basename' => $fileName,
+                'path' => $path,
             )
         );
 
@@ -133,11 +206,12 @@ class LocatorTest extends BaseTestCase
             ->willReturn($mockFileList)
         ;
 
-
-        $locator->locate();
+        $mockFileSystem->expects($this->exactly(1))
+            ->method('read')
+            ->with($path)
+            ->willReturn($json)
+        ;
     }
-    ////////////////////////////// MOCKS AND STUBS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-    /////////////////////////////// DATAPROVIDERS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 }
 
 /*EOF*/

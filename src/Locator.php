@@ -2,7 +2,6 @@
 
 namespace DevNanny\Connector;
 
-use Composer\Json\JsonFile;
 use DevNanny\Connector\Interfaces\LocatorInterface;
 use League\Flysystem\FilesystemInterface;
 
@@ -15,6 +14,8 @@ class Locator implements LocatorInterface
     const COMPOSER_TYPE = 'dev-nanny-connector';
 
     const ERROR_CONNECTOR_NOT_FOUND = 'The following Connector Class(es) could not be found: "%s"';
+
+    const LOCATE_FILE = 'composer.json';
 
     /** @var bool */
     private $strict = true;
@@ -83,7 +84,7 @@ class Locator implements LocatorInterface
         $fileList = $this->fileSystem->listContents('./', true);
 
         foreach ($fileList as $file) {
-            if ($file['basename'] === 'composer.json') {
+            if ($file['basename'] === self::LOCATE_FILE) {
                 $files[] = $file['path'];
             }
         }
@@ -101,10 +102,9 @@ class Locator implements LocatorInterface
         $connectors = [];
 
         foreach ($files as $file) {
-            $jsonFile = new JsonFile($file);
-            $json = $jsonFile->read();
+            $json = $this->getJsonContent($file);
             if (isset($json['type']) && $json['type'] === self::COMPOSER_TYPE) {
-                //@TODO: This belongs in the ComposerConnectorInstaller package
+                //@TODO: Section Validation belongs in the ComposerConnectorInstaller package
                 // $this->validateExtraSection($json, basename($file));
                 $connectors = array_merge(
                     $connectors,
@@ -114,6 +114,20 @@ class Locator implements LocatorInterface
         }
 
         return $connectors;
+    }
+
+    /**
+     * @param $file
+     *
+     * @return mixed
+     */
+    private function getJsonContent($file)
+    {
+        $json = $this->fileSystem->read($file);
+
+        $data = json_decode($json, true);
+
+        return $data;
     }
 }
 
