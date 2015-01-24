@@ -60,7 +60,7 @@ class Runner implements ConnectorInterface
      *
      * @return void
      */
-    final public function run(FilesystemInterface $filesystem, array $changeList = [])
+    final public function run(FilesystemInterface $filesystem, $changeList = null)
     {
         foreach ($this->collection as $connector) {
             $connector->run($filesystem, $changeList);
