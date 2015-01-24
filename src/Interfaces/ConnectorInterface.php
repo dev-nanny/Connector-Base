@@ -31,11 +31,11 @@ interface ConnectorInterface
      * tool to be retrieved at a later point.
      *
      * @param FilesystemInterface $filesystem The filesystem to run the connected tool against
-     * @param array $changeList Optional, the files that have changed
+     * @param array|null $changeList Optional, the files that have changed
      *
      * @return null
      */
-    public function run(FilesystemInterface $filesystem, array $changeList = []);
+    public function run(FilesystemInterface $filesystem, $changeList = null);
 }
 
 /*EOF*/
