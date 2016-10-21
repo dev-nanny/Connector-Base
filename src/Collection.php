@@ -15,14 +15,6 @@ class Collection implements CollectionInterface
     private $connectors;
 
     //////////////////////////// SETTERS AND GETTERS \\\\\\\\\\\\\\\\\\\\\\\\\\\
-
-    /**
-     *
-     */
-    final public function __construct()
-    {
-        $this->connectors = new \ArrayIterator;
-    }
     /**
      * Retrieve internal iterator
      *
@@ -36,6 +28,14 @@ class Collection implements CollectionInterface
     }
 
     //////////////////////////////// PUBLIC API \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+    /**
+     *
+     */
+    final public function __construct()
+    {
+        $this->connectors = new \ArrayIterator;
+    }
+
     /**
      * @param ConnectorInterface $connector
      */
